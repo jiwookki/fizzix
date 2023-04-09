@@ -79,17 +79,17 @@ def main():
     
 
     
-    SCREEN = pygame.display.set_mode([1800, 1200])
+    SCREEN = pygame.display.set_mode([900, 600])
     CLOCK = pygame.time.Clock()
     objects = {
         "1" : CircleObject(450, 100, 50, 10, [255, 255, 255]), 
-        "2" : CircleObject(250, 70, 50, 10, [255, 255, 255])
+        "2" : CircleObject(50, 30, 50, 10, [255, 255, 255])
     
     }
     
     deltaTime = 1
     fpsCounter = 0
-    timeScale = 1
+    timeScale = 0.1
     FPS = 0
 
     pygame.display.set_caption("fizzix fps:90")

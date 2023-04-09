@@ -71,7 +71,7 @@ class CircleCollider(Collider):
         
     def _overlap_delta_circle(self, circle):
         check_collider_type(circle, CollTypes.CIRCLE)
-        return (circle.radius + self.radius) - (self.position.distance_to(circle.position))
+        return ( + self.radius) - (self.position.distance_to(circle.position))
         
     @circle_only
     def check_collision(self, targetCollider):
