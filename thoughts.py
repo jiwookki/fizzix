@@ -1,4 +1,4 @@
-'''
+print('''
 How to check if line intersects circle?
 
 ax + by = c -> formula for linear equation
@@ -46,4 +46,20 @@ so if I were to program this or smth
 def find_shortest_distance():
     
 hmmmmmmmmmmmmmmm
-'''
+
+09/04/2023
+its my holiday and im still workingo n this
+i decided to just leave the circle-rectangle thing for later
+im gonna focus on the other things first and then maybe ill come back if i want to or if i can
+
+anyway Thinking Time!
+how to find overlap between 2 circles hitboxes?
+We have distance between the centres of 2 circles as well as the radii of both the circles.
+
+lolol after some thinking
+i have realized i am brain dead
+(radius1 + radius2) - currentdistance
+
+if result of expression is negative number, no overlap
+
+''')
