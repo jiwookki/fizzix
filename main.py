@@ -21,20 +21,28 @@ class Body():
         self.collider = None
         self.mass = mass
         self.velocity = math.Vector2(0, 0)
+        self.uelocity = math.Vector2(0, 0)
     
     def add_momentum(self, vector, dT):    
-        self.velocity = self.velocity + (vector / self.mass * dT)
+        self.uelocity = self.uelocity + (vector / self.mass * dT)
     
     def run(self, dT):
         self.x += self.velocity.x * dT
         self.y += self.velocity.y * dT
         self.collider.update_position(self.x, self.y)
+        self.velocity = self.uelocity
     
     def check_collision(self, targetBody):
         return self.collider.check_collision(targetBody.collider)
     
     def fix_collision(self, targetBody, dT):
-        self.add_momentum(self.collider.overlap_delta(targetBody.collider)*self.mass/2, dT)
+        print("fixed: " + str(self.velocity*((self.mass - targetBody.mass)/(self.mass + targetBody.mass)) + targetBody.velocity*(2*targetBody.mass**2/(self.mass+targetBody.mass))))
+        print("targetbody uelocity is " + str(targetBody.uelocity))
+        print(targetBody.uelocity*(2*targetBody.mass**2/(self.mass+targetBody.mass)))
+        collisiondelta = self.collider.overlap_delta(targetBody.collider)
+        self.x += collisiondelta[0] * (self.mass/(self.mass+targetBody.mass))
+        self.y += collisiondelta[1] * (self.mass/(self.mass+targetBody.mass))
+        self.velocity = self.uelocity*((self.mass - targetBody.mass)/(self.mass+targetBody.mass)) + targetBody.uelocity*(2*targetBody.mass**2/(self.mass+targetBody.mass))
     
 
 class CircleBody(Body):
@@ -87,21 +95,21 @@ def main():
     SCREEN = pygame.display.set_mode([900, 600])
     CLOCK = pygame.time.Clock()
     objects = {
-        "1" : CircleObject(450, 300, 50, 1, [255, 255, 255]), 
-        "2" : CircleObject(50, 300, 50, 10, [255, 255, 255])
+        "1" : CircleObject(450, 300, 50, 1, [255, 0, 255]), 
+        "2" : CircleObject(50, 300, 50, 1, [255, 255, 0])
     
     }
     
     deltaTime = 1
     fpsCounter = 0
-    timeScale = 0.05
+    timeScale = 0.4
     simulation_is_running = True
-    FPS = 0
+    FPS = 90
 
     pygame.display.set_caption("fizzix fps:90")
     CLOCK.tick(FPS)
 
-    objects["2"].body.add_momentum(pygame.Vector2(75, 0), deltaTime)
+    objects["2"].body.add_momentum(pygame.Vector2(7.5, 0), deltaTime)
     checklist = objects
     pygame.time.wait(500)
 
@@ -111,16 +119,25 @@ def main():
 
         for event in pygame.event.get():
             
-            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
-                
-
-                
-
+            if event.type == pygame.QUIT:
                 simulation_is_running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    FPS = 5
+                    
+                else:
                 
 
+                
 
-        for x in range(0, 7):
+                    simulation_is_running = False
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_p:
+                    FPS = 90
+                    timeScale = 0.4
+
+
+        for x in range(0, 1):
           for objectname in objects:
 
             # add cool physics here
@@ -128,10 +145,13 @@ def main():
             for checkobjectname in objects:
                 if objectname != checkobjectname:
                     if objects[objectname].body.check_collision(objects[checkobjectname].body):
-                        objects[objectname].renderer.color = [255, 0, 0]
+                        #objects[objectname].renderer.color = [255, 0, 0]
+                        #objects[checkobjectname].renderer.color = [255, 0, 0]
                         objects[objectname].body.fix_collision(objects[checkobjectname].body, deltaTime)
-                    else:
-                        objects[objectname].renderer.color = [255, 255, 255]
+                        objects[checkobjectname].body.fix_collision(objects[objectname].body, deltaTime)
+                   # else:
+                        #objects[objectname].renderer.color = [255, 255, 255]
+                        #objects[checkobjectname].renderer.color = [255, 255, 255]
                 
             
             
