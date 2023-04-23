@@ -99,8 +99,11 @@ def main():
     SCREEN = pygame.display.set_mode([900, 600])
     CLOCK = pygame.time.Clock()
     objects = {
-        "1" : CircleObject(450, 300, 50, 1, [0, 0, 255]), 
-        "2" : CircleObject(50, 300, 50, 1, [255, 0, 0])
+        "1" : CircleObject(430, 300, 25, 1, [0, 0, 255]), 
+        "2" : CircleObject(50, 300, 25, 1.5, [255, 0, 0]),
+        "3" : CircleObject(501, 300, 25, 1.1, [0, 0, 255]),
+        "4" : CircleObject(565, 224, 25, 1.2, [0, 0, 255]),
+        "5" : CircleObject(585, 301, 25, 1.4, [0, 0, 255]),
     
     }
     
@@ -113,7 +116,7 @@ def main():
     pygame.display.set_caption("fizzix fps:90")
     CLOCK.tick(FPS)
 
-    objects["2"].body.add_momentum(pygame.Vector2(7.5, 0), deltaTime)
+    objects["2"].body.add_momentum(pygame.Vector2(7.5, 0.5), deltaTime)
     collided = False
     pygame.time.wait(500)
 
@@ -165,6 +168,7 @@ def main():
 
 
         for objectname in objects:
+            #objects[objectname].body.add_momentum(pygame.Vector2(0, 0.01), deltaTime)
             objects[objectname].run(deltaTime)
 
         if collided == True:
