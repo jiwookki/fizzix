@@ -62,4 +62,15 @@ i have realized i am brain dead
 
 if result of expression is negative number, no overlap
 
+22/04/2023
+why am i _still_ working on this
+so anyway in physics class we learnt the momentum and stuff
+the momentum stuff
+right now the collision detection works by checking the overlap between 2 circles and then displacing them
+by a force enough that they dont overlap anymore
+problem with that is that now there's more energy out than in LOL
+so lets do this properly
+
+
+
 ''')
