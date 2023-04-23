@@ -27,22 +27,26 @@ class Body():
         self.uelocity = self.uelocity + (vector / self.mass * dT)
     
     def run(self, dT):
+        self.velocity = self.uelocity
         self.x += self.velocity.x * dT
         self.y += self.velocity.y * dT
         self.collider.update_position(self.x, self.y)
-        self.velocity = self.uelocity
+        
     
     def check_collision(self, targetBody):
         return self.collider.check_collision(targetBody.collider)
     
     def fix_collision(self, targetBody, dT):
-        print("fixed: " + str(self.velocity*((self.mass - targetBody.mass)/(self.mass + targetBody.mass)) + targetBody.velocity*(2*targetBody.mass**2/(self.mass+targetBody.mass))))
+        #print("fixed: " + str(self.velocity*((self.mass - targetBody.mass)/(self.mass + targetBody.mass)) + targetBody.velocity*(2*targetBody.mass**2/(self.mass+targetBody.mass))))
         print("targetbody uelocity is " + str(targetBody.uelocity))
-        print(targetBody.uelocity*(2*targetBody.mass**2/(self.mass+targetBody.mass)))
+        #print(targetBody.uelocity*(2*targetBody.mass**2/(self.mass+targetBody.mass)))
         collisiondelta = self.collider.overlap_delta(targetBody.collider)
+        print(collisiondelta)
         self.x += collisiondelta[0] * (self.mass/(self.mass+targetBody.mass))
         self.y += collisiondelta[1] * (self.mass/(self.mass+targetBody.mass))
-        self.velocity = self.uelocity*((self.mass - targetBody.mass)/(self.mass+targetBody.mass)) + targetBody.uelocity*(2*targetBody.mass**2/(self.mass+targetBody.mass))
+        
+        self.uelocity = (self.uelocity*((self.mass - targetBody.mass)/(self.mass+targetBody.mass)) + targetBody.velocity*(2*targetBody.mass**2/(self.mass+targetBody.mass))).magnitude() * collisiondelta.normalize()
+        #self.uelocity = targetBody.velocity
     
 
 class CircleBody(Body):
@@ -95,8 +99,8 @@ def main():
     SCREEN = pygame.display.set_mode([900, 600])
     CLOCK = pygame.time.Clock()
     objects = {
-        "1" : CircleObject(450, 300, 50, 1, [255, 0, 255]), 
-        "2" : CircleObject(50, 300, 50, 1, [255, 255, 0])
+        "1" : CircleObject(450, 300, 50, 1, [0, 0, 255]), 
+        "2" : CircleObject(50, 300, 50, 1, [255, 0, 0])
     
     }
     
@@ -104,13 +108,13 @@ def main():
     fpsCounter = 0
     timeScale = 0.4
     simulation_is_running = True
-    FPS = 90
+    FPS = 120
 
     pygame.display.set_caption("fizzix fps:90")
     CLOCK.tick(FPS)
 
     objects["2"].body.add_momentum(pygame.Vector2(7.5, 0), deltaTime)
-    checklist = objects
+    collided = False
     pygame.time.wait(500)
 
 
@@ -145,10 +149,13 @@ def main():
             for checkobjectname in objects:
                 if objectname != checkobjectname:
                     if objects[objectname].body.check_collision(objects[checkobjectname].body):
+                        print(objects[checkobjectname].body.velocity)
                         #objects[objectname].renderer.color = [255, 0, 0]
                         #objects[checkobjectname].renderer.color = [255, 0, 0]
+                        print(objectname, checkobjectname)
                         objects[objectname].body.fix_collision(objects[checkobjectname].body, deltaTime)
-                        objects[checkobjectname].body.fix_collision(objects[objectname].body, deltaTime)
+                        #collided = True
+
                    # else:
                         #objects[objectname].renderer.color = [255, 255, 255]
                         #objects[checkobjectname].renderer.color = [255, 255, 255]
@@ -157,7 +164,11 @@ def main():
             
 
 
+        for objectname in objects:
             objects[objectname].run(deltaTime)
+
+        if collided == True:
+            simulation_is_running = False
             
         for objectname in objects:
             objects[objectname].render(SCREEN)
@@ -173,11 +184,15 @@ def main():
         
         
         CLOCK.tick(FPS)
+
+
     body1 = objects["1"]
     body2 = objects["2"]
     print("Final results: ")
     print(f"Body 1 momentum: {body1.body.velocity[0] * body1.body.mass}, {body1.body.velocity[1] * body1.body.mass}")
     print(f"Body 2 momentum: {body2.body.velocity[0] * body2.body.mass}, {body2.body.velocity[1] * body2.body.mass}")
+    print(f"Body 1 umomentum: {body1.body.uelocity[0] * body1.body.mass}, {body1.body.uelocity[1] * body1.body.mass}")
+    print(f"Body 2 umomentum: {body2.body.uelocity[0] * body2.body.mass}, {body2.body.uelocity[1] * body2.body.mass}")
 
         
 
