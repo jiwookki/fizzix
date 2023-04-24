@@ -5,7 +5,7 @@ import collider
 
 class Body():
     
-    def __init__(self, x, y, length, mass):        
+    def __init__(self, x, y, length, mass, elasticity=1):        
         self.x = x
         self.y = y
         self.length = length
@@ -13,14 +13,15 @@ class Body():
         self.mass = mass
         self.velocity = math.Vector2(0, 0)
         self.uelocity = math.Vector2(0, 0)
+        self.elasticity = elasticity
     
     def add_momentum(self, vector, dT):    
-        self.uelocity = self.uelocity + (vector / self.mass * dT)
+        self.velocity = self.velocity + (vector / self.mass * dT)
     
     def run(self, dT):
-        self.velocity = self.uelocity
-        self.x += self.velocity.x * dT
-        self.y += self.velocity.y * dT
+        self.uelocity = self.velocity
+        self.x += self.uelocity.x * dT
+        self.y += self.uelocity.y * dT
         self.collider.update_position(self.x, self.y)
         
     
@@ -28,16 +29,17 @@ class Body():
         return self.collider.check_collision(targetBody.collider)
     
     def fix_collision(self, targetBody, dT):
-        #print("fixed: " + str(self.velocity*((self.mass - targetBody.mass)/(self.mass + targetBody.mass)) + targetBody.velocity*(2*targetBody.mass**2/(self.mass+targetBody.mass))))
+        
         print("targetbody uelocity is " + str(targetBody.uelocity))
-        #print(targetBody.uelocity*(2*targetBody.mass**2/(self.mass+targetBody.mass)))
+        
         collisiondelta = self.collider.overlap_delta(targetBody.collider)
         print(collisiondelta)
         self.x += collisiondelta[0] * (self.mass/(self.mass+targetBody.mass))
         self.y += collisiondelta[1] * (self.mass/(self.mass+targetBody.mass))
         
-        self.uelocity = (self.uelocity*((self.mass - targetBody.mass)/(self.mass+targetBody.mass)) + targetBody.velocity*(2*targetBody.mass**2/(self.mass+targetBody.mass))).magnitude() * collisiondelta.normalize()
-        #self.uelocity = targetBody.velocity
+        #self.velocity = (self.velocity*((self.mass - targetBody.mass)/(self.mass+targetBody.mass)) + targetBody.uelocity*(2*targetBody.mass/(self.mass+targetBody.mass))).magnitude() * collisiondelta.normalize()
+        self.velocity = ((self.elasticity*targetBody.mass*(targetBody.uelocity-self.uelocity) + self.mass*self.uelocity + targetBody.mass*targetBody.uelocity) / (self.mass + targetBody.mass)).magnitude() * collisiondelta.normalize()
+        
     
 
 class CircleBody(Body):
