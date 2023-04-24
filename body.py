@@ -5,7 +5,7 @@ import collider
 
 class Body():
     
-    def __init__(self, x, y, length, mass, elasticity=1):        
+    def __init__(self, x, y, length, mass, elasticity=0.9):        
         self.x = x
         self.y = y
         self.length = length
