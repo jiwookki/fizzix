@@ -5,7 +5,7 @@ import collider
 
 class Body():
     
-    def __init__(self, x, y, length, mass, elasticity=5):        
+    def __init__(self, x, y, length, mass, elasticity=0.5):        
         self.x = x
         self.y = y
         self.length = length
@@ -71,6 +71,10 @@ class Border(StaticBody):
         super().__init__(x, y)
         self.width = width
         self.height = height
+        self.collider = collider.BorderCollider(x, y, width, height)
+        
+    
+
     
 
 

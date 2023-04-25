@@ -50,9 +50,31 @@ class Collider():
 class RectCollider(Collider):
     
     def __init__(self, x, y, length, height):
-        super().__init__(self, x, y)
+        super().__init__(x, y)
         self._rect = pygame.Rect(x, y, length, height)
-      
+
+class BorderCollider(Collider):
+    def __init__(self, x, y, length, height):
+        super().__init__(x, y)
+        self.length = length
+        self.height = height
+
+    def _check_circle_collision(self, targetCircleCollider):
+        if targetCircleCollider.x + targetCircleCollider.radius > self.x or targetCircleCollider.x - targetCircleCollider.radius < self.x + self.length or targetCircleCollider.y + targetCircleCollider.radius > self.y or targetCircleCollider.y - targetCircleCollider.radius < self.y + self.height:
+            return True
+        else:
+            return False
+        
+
+    def _get_circle_overlap():
+        return ()
+    
+
+    @circle_only
+    def check_collision(self, targetCollider):
+        return self._check_circle_collision(targetCollider)
+
+        
 
 
 class CircleCollider(Collider):
