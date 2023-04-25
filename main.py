@@ -33,7 +33,7 @@ def main():
     fpsCounter = 0
     timeScale = 0.1
     simulation_is_running = True
-    FPS = 120
+    FPS = 0
 
     pygame.display.set_caption("fizzix fps:90")
     CLOCK.tick(FPS)
@@ -56,6 +56,14 @@ def main():
 
                 if event.key == pygame.K_p:
                     FPS = 24
+                elif event.key == pygame.K_w:
+                    objects["2"].body.add_momentum(pygame.Vector2(0, -4), deltaTime)
+                elif event.key == pygame.K_s:
+                    objects["2"].body.add_momentum(pygame.Vector2(0, 4), deltaTime)
+                elif event.key == pygame.K_a:
+                    objects["2"].body.add_momentum(pygame.Vector2(-4, 0), deltaTime)
+                elif event.key == pygame.K_d:
+                    objects["2"].body.add_momentum(pygame.Vector2(4, 0), deltaTime)
                     
                 else:
                 
