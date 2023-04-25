@@ -5,7 +5,7 @@ import collider
 
 class Body():
     
-    def __init__(self, x, y, length, mass, elasticity=0.9):        
+    def __init__(self, x, y, length, mass, elasticity=5):        
         self.x = x
         self.y = y
         self.length = length
@@ -54,4 +54,24 @@ class CircleBody(Body):
    
 class SquareBody(Body):
     pass    
+    
+
+class StaticBody():
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.mass = 2**64 - 1
+        self.collider = None
+    def fix_collision(self, targetBody, dT):
+        pass    
+
+
+class Border(StaticBody):
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y)
+        self.width = width
+        self.height = height
+    
+
+
     

@@ -38,14 +38,24 @@ class BaseEngine:
     def _event_handling(self):
         pass # DIY event handling
 
+
+    def every_frame(self):
+        pass # DIY GP every frame thing
+
+    def run_frame(self):
+        self._event_handling()
+        self._run_physics()
+        self._render_objects()
+        self.every_frame()
+        self.CLOCK.tick(self.FPS)
+        self.deltaTime = self.CLOCK.get_time() * self.timeScale
+
+
+
     def run(self):
         self.running = True
         while self.running:
-            self._event_handling()
-            self._run_physics()
-            self._render_objects()
-            self.CLOCK.tick(self.FPS)
-            self.deltaTime = self.CLOCK.get_time() * self.timeScale
+            self.run_frame()
 
 
 class Engine(BaseEngine):
@@ -66,6 +76,7 @@ class Engine(BaseEngine):
 
     def add_force_to_body(self, bodyIndex, force):
         self.objects[bodyIndex].body.add_momentum(force, self.deltaTime)
+
 
 
         
