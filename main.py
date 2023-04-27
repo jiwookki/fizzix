@@ -8,7 +8,7 @@ import engine
 def main():
     print("fizzix iz kool")
 
-    version = 0.3
+    version = 0.4
     pygame.init()
     
 
@@ -19,7 +19,8 @@ def main():
         "2" : object.CircleObject(50, 345, 15, 1, [255, 0, 0]),
         "3" : object.CircleObject(501, 260, 25, 10, [0, 255, 0]),
         "4" : object.CircleObject(565, 224, 25, 10, [0, 255, 255]),
-        "5" : object.CircleObject(585, 301, 25, 100000000, [255, 0, 255])
+        "5" : object.CircleObject(585, 301, 25, 100000000, [255, 0, 255]),
+        "border" : object.BorderObject(0, 0, 900, 600, [255, 255, 255])
     }
     screen = pygame.display.set_mode([900, 600], pygame.SCALED)
     pygame.display.set_caption("fizzix version {}".format(str(version)))

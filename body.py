@@ -6,9 +6,11 @@ import collider
 pygame.mixer.init()
 
 collide = pygame.mixer.Sound("ballhit.wav")
+
+
 class Body():
     
-    def __init__(self, x, y, length, mass, elasticity=0.5):        
+    def __init__(self, x, y, length, mass, elasticity=1):        
         self.x = x
         self.y = y
         self.length = length
@@ -61,12 +63,15 @@ class SquareBody(Body):
     pass    
     
 
-class StaticBody():
+class StaticBody(Body):
     def __init__(self, x, y):
         self.x = x
         self.y = y
         self.mass = 2**64 - 1
         self.collider = None
+        self.velocity = pygame.math.Vector2(0, 0)
+        self.uelocity = pygame.math.Vector2(0, 0)
+
     def fix_collision(self, targetBody, dT):
         pass    
 
@@ -77,7 +82,9 @@ class Border(StaticBody):
         self.width = width
         self.height = height
         self.collider = collider.BorderCollider(x, y, width, height)
-        
+    
+    
+
     
 
     
