@@ -1,4 +1,5 @@
 import pygame
+import pygame.gfxdraw
 
 
 class Renderer():
@@ -26,4 +27,5 @@ class CircleRenderer(Renderer):
         self.radius = radius
 
     def render(self, screen):
-        pygame.draw.circle(screen, self.color, [self.x, self.y], self.radius, width=0)
+        pygame.draw.circle(screen, self.color, [self.x, self.y], self.radius)
+        

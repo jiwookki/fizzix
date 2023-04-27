@@ -1,8 +1,11 @@
 
 from pygame import math
+import pygame.mixer
 import collider
 
+pygame.mixer.init()
 
+collide = pygame.mixer.Sound("ballhit.wav")
 class Body():
     
     def __init__(self, x, y, length, mass, elasticity=0.5):        
@@ -39,6 +42,7 @@ class Body():
         
         #self.velocity = (self.velocity*((self.mass - targetBody.mass)/(self.mass+targetBody.mass)) + targetBody.uelocity*(2*targetBody.mass/(self.mass+targetBody.mass))).magnitude() * collisiondelta.normalize()
         self.velocity = ((self.elasticity*targetBody.mass*(targetBody.uelocity-self.uelocity) + self.mass*self.uelocity + targetBody.mass*targetBody.uelocity) / (self.mass + targetBody.mass)).magnitude() * collisiondelta.normalize()
+        collide.play()
         
     
 
@@ -48,6 +52,7 @@ class CircleBody(Body):
         super().__init__(x, y, radius, mass)
         self.collider = collider.CircleCollider(x, y, radius)
         
+
 
     
 

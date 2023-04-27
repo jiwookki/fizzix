@@ -1,6 +1,9 @@
 import pygame
 import sys
 
+class EndOfSimulation(Exception):
+    pass
+
 
 class BaseEngine:
     def __init__(self, objects, timescale, fps):
@@ -56,6 +59,12 @@ class BaseEngine:
         self.running = True
         while self.running:
             self.run_frame()
+    
+    def add_force_to_body(self, bodyIndex, force):
+        self.objects[bodyIndex].body.add_momentum(force, self.deltaTime)
+
+    def get_body(self, bodyIndex):
+        return self.objects[bodyIndex].body
 
 
 class Engine(BaseEngine):
@@ -73,9 +82,9 @@ class Engine(BaseEngine):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+                raise EndOfSimulation
 
-    def add_force_to_body(self, bodyIndex, force):
-        self.objects[bodyIndex].body.add_momentum(force, self.deltaTime)
+
 
 
 
