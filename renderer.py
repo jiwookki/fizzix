@@ -28,4 +28,14 @@ class CircleRenderer(Renderer):
 
     def render(self, screen):
         pygame.draw.circle(screen, self.color, [self.x, self.y], self.radius)
-        
+
+
+class RectRenderer(Renderer):
+    def __init__(self, x, y, color, width, height):
+        super().__init__(x, y, color)
+        self.width = width
+        self.height = height
+        self.rect = pygame.Rect(x, y, width, height)
+    
+    def render(self, screen):
+        pygame.draw.rect(screen, self.color, self.rect, width=1)

@@ -26,6 +26,7 @@ class BaseEngine:
                 if objectname != checkobjectname:
 
                     if self.objects[objectname].body.check_collision(self.objects[checkobjectname].body):
+                        print("hi")
 
                         print(self.objects[checkobjectname].body.velocity)
                         print(objectname, checkobjectname)

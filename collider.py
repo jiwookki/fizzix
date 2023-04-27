@@ -7,6 +7,7 @@ class CollTypes(Enum):
 
     CIRCLE = "circle"
     RECT = "rect"
+    BORDER = "border"
 
 
 def check_collider_type(targetCollider, targetType):
@@ -20,11 +21,14 @@ def check_collider_type(targetCollider, targetType):
 def circle_only(fun):
 
     def outfunction(self, targetCollider):
-        if targetCollider.type == CollTypes.CIRCLE:
+        if targetCollider.type == CollTypes.CIRCLE or targetCollider.type == CollTypes.BORDER:
             return fun(self, targetCollider)
         else:
             raise NotImplementedError("i havent made anything other than circletocircle yet lol")
     return outfunction
+
+
+
 
 
 class Collider():
@@ -53,21 +57,53 @@ class RectCollider(Collider):
         super().__init__(x, y)
         self._rect = pygame.Rect(x, y, length, height)
 
+
 class BorderCollider(Collider):
     def __init__(self, x, y, length, height):
         super().__init__(x, y)
         self.length = length
         self.height = height
+        self.type = CollTypes.BORDER
 
-    def _check_circle_collision(self, targetCircleCollider):
-        if targetCircleCollider.x + targetCircleCollider.radius > self.x or targetCircleCollider.x - targetCircleCollider.radius < self.x + self.length or targetCircleCollider.y + targetCircleCollider.radius > self.y or targetCircleCollider.y - targetCircleCollider.radius < self.y + self.height:
+    def _ccsaxis(self, radius, x, sx, length):
+        if x + radius > sx + length:
+            return 1
+        elif x - radius < sx:
+            return -1
+        else:
+            return 0
+
+    def _check_circle_collision(self, targetColl):
+        if self._ccsaxis(targetColl.radius, targetColl.position[0], self.position[0], self.length) != 0 or self._ccsaxis(targetColl.radius, targetColl.position[1], self.position[1], self.height) != 0:
+            print("collision")
             return True
         else:
+            print("nocoll")
             return False
         
 
-    def _get_circle_overlap():
-        return ()
+    def _get_circle_overlap(self, targetColl):
+        overlap = pygame.Vector2(0, 0)
+        selfx = self.position[0]
+        selfy = self.position[1]
+
+        targetCollX = targetColl.position[0]
+        targetCollY = targetColl.position[1]
+        ccsx = self._ccsaxis(targetColl.radius, targetCollX, selfx, self.length)
+        ccsy = self._ccsaxis(targetColl.radius, targetCollY, selfy, self.height)
+        if ccsx == 1:
+            overlap.x = (targetCollX + targetColl.radius) - (selfx + self.length)
+        elif ccsx == -1:
+            overlap.x = selfx - (targetColl.radius - targetCollX)
+        if ccsy == 1:
+            overlap.y = (targetCollY + targetColl.radius) - (selfy + self.height) 
+        elif ccsy == -1:
+            overlap.y = selfy - (targetColl.radius - targetCollY)
+        return overlap
+        
+        
+        
+        
     
 
     @circle_only
@@ -85,20 +121,29 @@ class CircleCollider(Collider):
         self.type = CollTypes.CIRCLE
 
     def _check_circle_collision(self, circle):
-        check_collider_type(circle, CollTypes.CIRCLE)
-        if self.position.distance_to(circle.position) <= self.radius + circle.radius:
+        if circle.type == CollTypes.CIRCLE:
+          if self.position.distance_to(circle.position) <= self.radius + circle.radius:
             return True
-        else:
+          else:
             return False
+
         
     def _overlap_delta_circle(self, circle):
         check_collider_type(circle, CollTypes.CIRCLE)
         #return (circle.position - self.position).normalize()*-(self.position.distance_to(circle.position))
         return -(circle.position - self.position).normalize() * (self.radius + circle.radius - self.position.distance_to(circle.position))/2
-    @circle_only
+
     def check_collision(self, targetCollider):
-        return self._check_circle_collision(targetCollider)
+        if targetCollider.type == CollTypes.CIRCLE:
+            return self._check_circle_collision(targetCollider)
+        elif targetCollider.type == CollTypes.BORDER:
+            return targetCollider._check_circle_collision(self)
     
-    @circle_only
+
     def overlap_delta(self, targetCollider):
-        return self._overlap_delta_circle(targetCollider)
+        if targetCollider.type == CollTypes.CIRCLE:
+            print("wee")
+            return self._overlap_delta_circle(targetCollider)
+        elif targetCollider.type == CollTypes.BORDER:
+            print("yee")
+            return -1 * targetCollider._get_circle_overlap(self)
