@@ -13,6 +13,7 @@ class BaseEngine:
         self.timeScale = timescale
         self.FPS = fps
         self.CLOCK = pygame.time.Clock()
+        self.everyframes = []
 
 
 
@@ -26,10 +27,9 @@ class BaseEngine:
                 if objectname != checkobjectname:
 
                     if self.objects[objectname].body.check_collision(self.objects[checkobjectname].body):
-                        print("hi")
 
-                        print(self.objects[checkobjectname].body.velocity)
-                        print(objectname, checkobjectname)
+
+
                         self.objects[objectname].body.fix_collision(self.objects[checkobjectname].body, self.deltaTime)
 
         for objectname in self.objects:
@@ -45,6 +45,12 @@ class BaseEngine:
 
     def every_frame(self):
         pass # DIY GP every frame thing
+        for things in self.everyframes:
+            things(self)
+    
+    def register_everyframe(self, func):
+        self.everyframes.append(func)
+        return func
 
     def run_frame(self):
         self._event_handling()
@@ -84,6 +90,22 @@ class Engine(BaseEngine):
             if event.type == pygame.QUIT:
                 self.running = False
                 raise EndOfSimulation
+
+
+class PhysicsTestEngine(Engine):
+    def _event_handling(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+                raise EndOfSimulation
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.timeScale = 1.2
+                elif event.key == pygame.K_s:
+                    self.timeScale = 12
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_s:
+                    self.timeScale = 0.4
 
 
 

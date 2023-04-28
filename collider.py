@@ -75,10 +75,8 @@ class BorderCollider(Collider):
 
     def _check_circle_collision(self, targetColl):
         if self._ccsaxis(targetColl.radius, targetColl.position[0], self.position[0], self.length) != 0 or self._ccsaxis(targetColl.radius, targetColl.position[1], self.position[1], self.height) != 0:
-            print("collision")
             return True
         else:
-            print("nocoll")
             return False
         
 
@@ -142,8 +140,6 @@ class CircleCollider(Collider):
 
     def overlap_delta(self, targetCollider):
         if targetCollider.type == CollTypes.CIRCLE:
-            print("wee")
             return self._overlap_delta_circle(targetCollider)
         elif targetCollider.type == CollTypes.BORDER:
-            print("yee")
             return -1 * targetCollider._get_circle_overlap(self)

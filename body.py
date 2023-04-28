@@ -35,10 +35,7 @@ class Body():
     
     def fix_collision(self, targetBody, dT):
         
-        print("targetbody uelocity is " + str(targetBody.uelocity))
-        
         collisiondelta = self.collider.overlap_delta(targetBody.collider)
-        print(collisiondelta)
         self.x += collisiondelta[0] * (self.mass/(self.mass+targetBody.mass))
         self.y += collisiondelta[1] * (self.mass/(self.mass+targetBody.mass))
         
