@@ -1,5 +1,6 @@
 import pygame
 import object
+import fizzix_engine
 import engine
 import random
 # Created 19/03/2023 :/
@@ -25,19 +26,18 @@ def main():
 #        "5" : object.CircleObject(585, 301, 25, 10, [255, 0, 255]),
         "border" : object.BorderObject(0, 0, 900, 600, [255, 255, 255])
     }
-    for x in range(0,10):
-       gameObjects[str(x)] = object.CircleObject(random.randint(50, 850), random.randint(50, 550), 15, 10, [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)])
+    gameObjects["2"] = object.CircleObject(random.randint(50, 850), random.randint(50, 550), 25, 50, [255, 255, 255])
     screen = pygame.display.set_mode([900, 600], pygame.SCALED)
     pygame.display.set_caption("fizzix version {}".format(str(version)))
 
-    gameEngine = engine.PhysicsTestEngine(gameObjects, 0.4, 0, screen)
+    gameEngine = fizzix_engine.PhysicsTestEngine(gameObjects, 0.4, 0, screen)
     #ameEngine.add_force_to_body("2", pygame.Vector2(7.5, 0.5))
     try:
       while True:
         gameEngine.run_frame()
         b2 = gameEngine.get_body("2")
         
-        gameEngine.add_force_to_body("2", pygame.Vector2(pygame.mouse.get_pos() - pygame.Vector2(b2.x, b2.y))/4000)
+        gameEngine.add_force_to_body("2", pygame.Vector2(pygame.mouse.get_pos() - pygame.Vector2(b2.x, b2.y))/400)
     except engine.EndOfSimulation:
        print("im done now")
 
