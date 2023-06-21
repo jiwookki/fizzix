@@ -1,5 +1,6 @@
 import pygame
 import object
+
 import fizzix_engine
 import engine
 import random
@@ -14,7 +15,8 @@ def main():
 
     version = 0.4
     pygame.init()
-    
+    print(f"pygame display driver is {str(pygame.display.get_driver())}")
+    print(f"pygame display hw accelerated? {str(pygame.display.Info().hw)}")
 
 
 
