@@ -3,9 +3,9 @@ from pygame import math
 import pygame.mixer
 import collider
 
-pygame.mixer.init()
 
-collide = pygame.mixer.Sound("ballhit.wav")
+
+
 
 
 class Body():
@@ -41,7 +41,7 @@ class Body():
         
         #self.velocity = (self.velocity*((self.mass - targetBody.mass)/(self.mass+targetBody.mass)) + targetBody.uelocity*(2*targetBody.mass/(self.mass+targetBody.mass))).magnitude() * collisiondelta.normalize()
         self.velocity = ((self.elasticity*targetBody.mass*(targetBody.uelocity-self.uelocity) + self.mass*self.uelocity + targetBody.mass*targetBody.uelocity) / (self.mass + targetBody.mass)).magnitude() * collisiondelta.normalize()
-        collide.play()
+
         
     
 

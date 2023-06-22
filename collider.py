@@ -51,11 +51,21 @@ class Collider():
         
    
 
-class RectCollider(Collider):
+class RectangleCollider(Collider):
     
-    def __init__(self, x, y, length, height):
-        super().__init__(x, y)
-        self._rect = pygame.Rect(x, y, length, height)
+    def __init__(self, point1, point2, length):
+        super().__init__(point1[0], point1[1])
+        self.points = [
+            point1,
+            point2,
+            ((point2-point1).normalize().rotate(90) * length) + point2,
+            ((point2-point1).normalize().rotate(90) * length) + point1
+        ]
+        
+
+        
+        
+        
 
 
 class BorderCollider(Collider):
