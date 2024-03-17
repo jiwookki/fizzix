@@ -72,5 +72,19 @@ problem with that is that now there's more energy out than in LOL
 so lets do this properly
 
 
+      
+25/07/2023
+im back
+      
+rectangle collider...
+how to?
+      uhhhh
+      for each axis (x, y):
+      1. take sides of rectangle, project onto axis
+      2. do the sides intersect? 
+      3. if yes, collision. if no, uncollision
+lets try it
+
+
 
 ''')

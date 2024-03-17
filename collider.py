@@ -61,6 +61,20 @@ class RectangleCollider(Collider):
             ((point2-point1).normalize().rotate(90) * length) + point2,
             ((point2-point1).normalize().rotate(90) * length) + point1
         ]
+    
+    def _check_circle_collision(self, circle):
+        pass
+    
+    def _check_rectangle_axis(self, rect1, rect2, axis):
+        
+    def _check_rectangle_collision(self, rectangle):
+        # Use Separating Axis Theorem. compare against x and y axes
+        
+        
+
+    def check_collision(self, targetCollider):
+        if targetCollider.type == CollTypes.CIRCLE:
+            return 
         
 
         
