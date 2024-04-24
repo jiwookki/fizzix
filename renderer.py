@@ -1,6 +1,6 @@
 import pygame
 import pygame.gfxdraw
-
+import math
 
 class Renderer():
     # I would call this the Sprite class but pygame already has a sprite class so 
@@ -12,6 +12,9 @@ class Renderer():
     def update_position(self, x, y):
         self.x = x
         self.y = y
+
+    def update_rotation(angle):
+        pass # the circle renderer does not need it
 
 
 
@@ -42,38 +45,63 @@ class RectRenderer(Renderer):
         pygame.draw.rect(screen, self.color, self.rect, width=1)
 
 
-
 class RectangleRenderer(Renderer):
-
-    def __init__(self, point1, point2, length, color, line_width=0):
+    def __init__(self, x, y, color, width, height, angle):
+        '''represents general purpose rectangle renderer (i.e. one that can rotate).
+        x, y are the coordinates of the center of the rectangle.
+        width, height are the width and height of the rectangle.
+        angle measures how rotated the rectangle is, measured from the center of the rectangle.
         '''
-        Used to define a rectangle that can be rotated. 
-        point1 and point2 are Vector2 objects that will be used to define one side of the rectangle. 
-        The distance between point1 and point2 is the length of the rectangle. 
-        From this information, point3 and point4 will be generated, at distance 'width'
-        away from point1 and point2, and at 90 degree angle from point1 and point2 side. 
-        '''
-        super().__init__(point1[0], point1[1], color)
+        super().__init__(x, y, color)
+        self.center = pygame.Vector2(x, y)  
+        self._hw = width/2 # half width
+        self._hh = height/2 # half height
+        self.angle = angle
+        self._center_angle = math.atan(self._hh/self._hw)
 
-        self.points = [
-            point1,
-            point2,
-            ((point2-point1).normalize().rotate(90) * length) + point2,
-            ((point2-point1).normalize().rotate(90) * length) + point1
-        ]
-        
-        self.line_width = line_width
-        self.width = abs((point2-point1).magnitude())
-        self.length = length
-        self.angle = (point2-point1).as_polar()[1]
-        print(self.width, self.length, self.angle)
+        self._cradius = math.sqrt(self._hw*self._hw + self._hh*self._hh) # cradius = circumcenter radius
+        self.ra = self.angle + self._center_angle
+
+        print(f"circum radius = {str(self._cradius)}")
+        print(f"A angle = {str(self.ra)}")
+        print(f"center angle = {str(self._center_angle)}")
+
+
+        self.points = self._calculate_points()
     
+    def _get_corner_point(self, angle):
+        return [self.x + self._cradius * math.cos(angle), self.y + self._cradius * math.sin(angle)]
+    
+    def _calculate_points(self):
+
+        p1 = self._get_corner_point(self._center_angle + self.angle)
+        p2 = self._get_corner_point(math.pi-self._center_angle + self.angle)
+        p3 = self._get_corner_point(math.pi+self._center_angle + self.angle)
+        p4 = self._get_corner_point(2*math.pi-self._center_angle + self.angle)
+
+        return [p1,p2,p3,p4]
+
     def update_position(self, x, y):
-        for point in self.points:
-            point.x += x
-            point.y += y
-            self.points[self.points.index(point)] = point
+        dx = x - self.x
+        dy = y - self.y
+        super().update_position(x, y)
+        for i, p in enumerate(self.points):
+            self.points[i] = [p[0]+dx, p[1]+dy]
+
+
+    def update_rotation(self, angle):
+        self.angle = angle
+        self.ra = self.angle + self._center_angle
+        self.points = self._calculate_points()
+        
 
     def render(self, screen):
         pygame.draw.polygon(screen, self.color, self.points)
+
+        
+        
+
+
+
+
 

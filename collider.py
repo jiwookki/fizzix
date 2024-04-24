@@ -66,10 +66,11 @@ class RectangleCollider(Collider):
         pass
     
     def _check_rectangle_axis(self, rect1, rect2, axis):
+        pass
         
     def _check_rectangle_collision(self, rectangle):
         # Use Separating Axis Theorem. compare against x and y axes
-        
+        pass
         
 
     def check_collision(self, targetCollider):
