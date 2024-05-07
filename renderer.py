@@ -60,10 +60,8 @@ class RectangleRenderer(Renderer):
         self._center_angle = math.atan(self._hh/self._hw)
 
         self._cradius = math.sqrt(self._hw*self._hw + self._hh*self._hh) # cradius = circumcenter radius
-        self.ra = self.angle + self._center_angle
 
         print(f"circum radius = {str(self._cradius)}")
-        print(f"A angle = {str(self.ra)}")
         print(f"center angle = {str(self._center_angle)}")
 
 
@@ -91,7 +89,6 @@ class RectangleRenderer(Renderer):
 
     def update_rotation(self, angle):
         self.angle = angle
-        self.ra = self.angle + self._center_angle
         self.points = self._calculate_points()
         
 
@@ -99,7 +96,31 @@ class RectangleRenderer(Renderer):
         pygame.draw.polygon(screen, self.color, self.points)
 
         
-        
+class PygameRectangleRenderer(Renderer):
+    '''uses pygame.Surface rectangle and pygame transform functions to render rectangle.
+    Currently not working well enough to replace RectangleRenderer, as the rotation is not fixed about the center of the rectangle.
+    Performance is approx. 25% better than regular RectangleRenderer at this point. quite disappointing...
+    '''
+    def __init__(self, x, y, color, width, height, angle):
+        super().__init__(x, y, color)
+        self.width = width
+        self.height = height
+        self.angle = angle
+
+        self._base_surface = pygame.Surface((width, height), flags=pygame.SRCALPHA)
+        self._base_surface.fill(self.color)
+
+        self._surface = pygame.transform.rotate(self._base_surface, math.degrees(self.angle))
+    
+    def update_rotation(self, angle):
+        self.angle = angle
+        self._surface = pygame.transform.rotate(self._base_surface, math.degrees(self.angle))
+    
+    def render(self, screen):
+        screen.blit(self._surface, [self.x, self.y])
+    
+
+
 
 
 
