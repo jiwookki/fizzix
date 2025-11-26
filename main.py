@@ -39,7 +39,7 @@ def main():
         gameEngine.run_frame()
         b2 = gameEngine.get_body("2")
         
-        gameEngine.add_force_to_body("2", pygame.Vector2(pygame.mouse.get_pos() - pygame.Vector2(b2.x, b2.y))/400)
+        gameEngine.add_force_to_body("2", (pygame.Vector2(pygame.mouse.get_pos() - pygame.Vector2(b2.x, b2.y))/400))
     except engine.EndOfSimulation:
        print("im done now")
 
